@@ -1,20 +1,31 @@
 import { auth } from "../uiComponents/authUi.js";
 import { profile } from "../uiComponents/profileUi.js";
+import { fetchUserProfile } from "./graphQl.js";
 import { domain } from "./main.js";
 
 export async function checkAuthStatusAndRenderUi() {
     const app = document.getElementById('main-app')
 
+    app.innerHTML = ""
+
     const token = localStorage.getItem("token");
     if (token) {
-        app.innerHTML = profile()
+        try {
+            const user = await fetchUserProfile(token);
+            app.innerHTML = profile(user);
+        } catch (err) {
+            console.warn("Token invalid or expired. Logging out...");
+            localStorage.removeItem("token");
+            checkAuthStatusAndRenderUi()
+            return;
+        }
 
         const logoutBtn = document.getElementById('logout-btn')
         logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault()
-        localStorage.removeItem("token");
-        checkAuthStatusAndRenderUi()
-    });
+            e.preventDefault()
+            localStorage.removeItem("token");
+            checkAuthStatusAndRenderUi()
+        });
     } else {
         app.innerHTML = auth()
         setupAuthListeners()
@@ -50,7 +61,7 @@ function setupAuthListeners() {
             localStorage.setItem("token", token);
             checkAuthStatusAndRenderUi()
         } catch (error) {
-            authError.textContent = "Login failed: " + err.message;
+            authError.textContent = "Login failed: " + error.message;
         }
     });
 }
