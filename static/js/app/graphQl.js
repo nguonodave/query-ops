@@ -28,7 +28,10 @@ export async function fetchUserProfile(token) {
         
         # Project Data (for pass/fail pie chart)
         progresses(
-          where: {object: {type: {_eq: "project"}}},
+          where: {
+            object: {type: {_eq: "project"}},
+            grade: { _is_null: false }
+          },
           order_by: {createdAt: desc}
         ) {
           grade
