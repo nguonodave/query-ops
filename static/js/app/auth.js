@@ -1,6 +1,6 @@
 import { auth } from "../uiComponents/authUi.js";
 import { profile } from "../uiComponents/profileUi.js";
-import { processLatestProject, processXpData } from "./dataProcessors.js";
+import { processDownRatio, processLatestProject, processUpRatio, processXpData } from "./dataProcessors.js";
 import { fetchUserProfile } from "./graphQl.js";
 import { domain } from "./main.js";
 
@@ -15,7 +15,9 @@ export async function checkAuthStatusAndRenderUi() {
             const user = await fetchUserProfile(token);
             const processedData = {
                 xp: processXpData(user.xpTransactions),
-                latestProject: processLatestProject(user.progresses)
+                latestProject: processLatestProject(user.progresses),
+                up: processUpRatio(user.auditTransactions),
+                down: processDownRatio(user.auditTransactions)
             };
             app.innerHTML = profile(user, processedData);
         } catch (err) {
