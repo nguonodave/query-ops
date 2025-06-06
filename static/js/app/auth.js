@@ -1,5 +1,6 @@
 import { auth } from "../uiComponents/authUi.js";
 import { profile } from "../uiComponents/profileUi.js";
+import { processLatestProject, processXpData } from "./dataProcessors.js";
 import { fetchUserProfile } from "./graphQl.js";
 import { domain } from "./main.js";
 
@@ -12,11 +13,14 @@ export async function checkAuthStatusAndRenderUi() {
     if (token) {
         try {
             const user = await fetchUserProfile(token);
-            app.innerHTML = profile(user);
+            const processedData = {
+                xp: processXpData(user.xpTransactions),
+                latestProject: processLatestProject(user.progresses)
+            };
+            app.innerHTML = profile(user, processedData);
         } catch (err) {
-            console.warn("Token invalid or expired. Logging out...", err);
-            localStorage.removeItem("token");
-            checkAuthStatusAndRenderUi()
+            alert("An error occured. Check back later...")
+            console.log(err)
             return;
         }
 
