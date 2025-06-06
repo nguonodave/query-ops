@@ -20,7 +20,10 @@ export async function fetchUserProfile(token) {
         
         # Audit Data (for audit ratio pie chart)
         auditTransactions: transactions(
-          where: {type: {_in: ["up", "down"]}}
+          where: {
+            type: {_in: ["up", "down"]},
+            eventId: {_eq: 75}
+          }
         ) {
           type
           amount
