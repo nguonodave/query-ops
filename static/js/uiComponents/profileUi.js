@@ -1,9 +1,16 @@
 export const profile = (user, processedData) => `
 <div id="profile">
   <section class="user-card">
-    <h2>${user.login}</h2>
-    <p>${user.attrs?.firstName || ''} ${user.attrs?.lastName || ''}</p>
-    <p>${user.attrs?.email || ''}</p>
+    <h2>Username: ${user.login}</h2>
+    <p>Full name: ${user.attrs.firstName} ${user.attrs.middleName} ${user.attrs.lastName}</p>
+    <p>Email: ${user.attrs.email}</p>
+    <p> Date of Birth:
+    ${new Date(user.attrs.dateOfBirth).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    })}
+    </p>
   </section>
 
   <section class="xp-summary">

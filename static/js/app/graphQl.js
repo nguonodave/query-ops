@@ -11,12 +11,11 @@ export async function fetchUserProfile(token) {
         
         # XP Data (for line graph)
         xpTransactions: transactions(
-          where: {type: {_eq: "xp"}}, 
+          where: {type: {_eq: "xp"}},
           order_by: {createdAt: asc}
         ) {
           amount
           createdAt
-          path
         }
         
         # Audit Data (for audit ratio pie chart)
@@ -25,12 +24,11 @@ export async function fetchUserProfile(token) {
         ) {
           type
           amount
-          createdAt
         }
         
         # Project Data (for pass/fail pie chart)
         progresses(
-          where: {object: {type: {_eq: "project"}}}, 
+          where: {object: {type: {_eq: "project"}}},
           order_by: {createdAt: desc}
         ) {
           grade
