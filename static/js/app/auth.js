@@ -2,6 +2,7 @@ import { auth } from "../uiComponents/authUi.js";
 import { profile } from "../uiComponents/profileUi.js";
 import { processDoneRatio, processLatestProject, processReceivedRatio, processXpData } from "./dataProcessors.js";
 import { fetchUserProfile } from "./graphQl.js";
+import { passFailChart } from "./graphs.js";
 import { domain } from "./main.js";
 
 export async function checkAuthStatusAndRenderUi() {
@@ -11,20 +12,15 @@ export async function checkAuthStatusAndRenderUi() {
 
     const token = localStorage.getItem("token");
     if (token) {
-        try {
-            const user = await fetchUserProfile(token);
-            const processedData = {
-                xp: processXpData(user.xpTransactions),
-                latestProject: processLatestProject(user.progresses),
-                up: processDoneRatio(user.auditTransactions),
-                down: processReceivedRatio(user.auditTransactions)
-            };
-            app.innerHTML = profile(user, processedData);
-        } catch (err) {
-            alert("An error occured. Check back later...")
-            console.log(err)
-            return;
-        }
+        const user = await fetchUserProfile(token);
+        const processedData = {
+            xp: processXpData(user.xpTransactions),
+            latestProject: processLatestProject(user.progresses),
+            up: processDoneRatio(user.auditTransactions),
+            down: processReceivedRatio(user.auditTransactions)
+        };
+        app.innerHTML = profile(user, processedData);
+        passFailChart(user.progresses)
 
         const logoutBtn = document.getElementById('logout-btn')
         logoutBtn.addEventListener('click', (e) => {
