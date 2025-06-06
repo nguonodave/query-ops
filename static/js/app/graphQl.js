@@ -7,6 +7,7 @@ export async function fetchUserProfile(token) {
         # Basic Identification
         login
         attrs
+        auditRatio
         
         # XP Data (for line graph)
         xpTransactions: transactions(
