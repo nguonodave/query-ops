@@ -55,9 +55,5 @@ export async function fetchUserProfile(token) {
     throw new Error(result.errors[0].message);
   }
 
-//   console.log(result)
-//   console.log(result.data)
-//   console.log(result.data.user[0])
-
   return result.data.user[0];
 }
