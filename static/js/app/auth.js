@@ -14,7 +14,7 @@ export async function checkAuthStatusAndRenderUi() {
             const user = await fetchUserProfile(token);
             app.innerHTML = profile(user);
         } catch (err) {
-            console.warn("Token invalid or expired. Logging out...");
+            console.warn("Token invalid or expired. Logging out...", err);
             localStorage.removeItem("token");
             checkAuthStatusAndRenderUi()
             return;

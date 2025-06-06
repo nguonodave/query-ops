@@ -4,9 +4,39 @@ export async function fetchUserProfile(token) {
   const query = `
     {
       user {
-        id
+        # Basic Identification
         login
         attrs
+        
+        # XP Data (for line graph)
+        xpTransactions: transactions(
+          where: {type: {_eq: "xp"}}, 
+          order_by: {createdAt: asc}
+        ) {
+          amount
+          createdAt
+          path
+        }
+        
+        # Audit Data (for audit ratio pie chart)
+        auditTransactions: transactions(
+          where: {type: {_in: ["up", "down"]}}
+        ) {
+          type
+          amount
+          createdAt
+        }
+        
+        # Project Data (for pass/fail pie chart)
+        progresses(
+          where: {object: {type: {_eq: "project"}}}, 
+          order_by: {createdAt: desc}
+        ) {
+          grade
+          object {
+            name
+          }
+        }
       }
     }
   `;
