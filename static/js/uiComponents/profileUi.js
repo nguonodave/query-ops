@@ -1,5 +1,10 @@
 export const profile = (user, processedData) => `
 <div id="profile">
+    <nav>
+        <h1>Your dashboard</h1>
+        <button id="logout-btn">Logout</button>
+    </nav>
+
     <section class="user-card">
         <h2>Username: ${user.login}</h2>
         <p>Full name: ${user.attrs.firstName} ${user.attrs.middleName} ${user.attrs.lastName}</p>
@@ -74,7 +79,5 @@ export const profile = (user, processedData) => `
     </div>
 
     <div class="tooltip"></div>
-
-    <button id="logout-btn">Logout</button>
 </div>
 `;

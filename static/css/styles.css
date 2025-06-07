@@ -21,6 +21,12 @@ body {
 
 button {
     border: none;
+    width: fit-content;
+    border-radius: var(--border-radius);
+    padding: 12px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 button:hover {
@@ -34,6 +40,29 @@ button:hover {
 
 .error {
     color: red;
+}
+
+#main-app {
+    padding: 0 7%;
+}
+
+#profile {
+    display: flex;
+    flex-direction: column;
+}
+
+/* nav styles =========================================================================== */
+nav {
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+    /* background-color: red; */
+    padding: 12px 0;
+}
+
+nav button {
+    background-color: red;
+    font-size: 1em;
 }
 
 /* pass/fail chart styles ================================================================ */
@@ -185,10 +214,6 @@ button:hover {
 }
 
 .error-page button {
-    width: fit-content;
     margin: auto;
-    padding: 12px;
-    border-radius: var(--border-radius);
     background-color: var(--pri-color);
-    color: white;
 }
