@@ -46,20 +46,35 @@ export async function fetchUserProfile(token) {
     }
   `;
 
-  const response = await fetch(`https://${domain}/api/graphql-engine/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify({ query }),
-  });
+  try {
+    const response = await fetch(`https://${domain}/api/graphql-engine/v1/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+    const result = await response.json();
 
-  const result = await response.json();
+    if (response.ok) {
+      return result.data.user[0];
+    } else {
+      console.log("unexpected response: ", response.status)
+    }
 
-  if (result.errors) {
-    throw new Error(result.errors[0].message);
+  } catch (error) {
+    const app = document.getElementById('main-app')
+    console.log(error)
+    app.innerHTML = `
+    <div class="error-page">
+        <p class="error-page-text">${error.message}. Make sure you have a stable connection.</p>
+        <p class="error-page-text">If you think the error is from us, please check back later.</p>
+        <button class="err-btn">Try again</button>
+    </div>
+    `
+    document.querySelector('.err-btn').addEventListener('click', () => {
+      window.location.reload()
+    })
   }
-
-  return result.data.user[0];
 }
