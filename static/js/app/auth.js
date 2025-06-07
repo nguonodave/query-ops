@@ -2,7 +2,7 @@ import { auth } from "../uiComponents/authUi.js";
 import { profile } from "../uiComponents/profileUi.js";
 import { processDoneRatio, processLatestProject, processReceivedRatio, processXpData } from "./dataProcessors.js";
 import { fetchUserProfile } from "./graphQl.js";
-import { auditRatioChart, passFailChart } from "./graphs.js";
+import { auditRatioChart, lineGraph, passFailChart } from "./graphs.js";
 import { domain } from "./main.js";
 
 export async function checkAuthStatusAndRenderUi() {
@@ -22,6 +22,7 @@ export async function checkAuthStatusAndRenderUi() {
         app.innerHTML = profile(user, processedData);
         passFailChart(user.progresses)
         auditRatioChart(user.auditTransactions)
+        lineGraph(user.xpTransactions)
 
         const logoutBtn = document.getElementById('logout-btn')
         logoutBtn.addEventListener('click', (e) => {

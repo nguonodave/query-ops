@@ -177,3 +177,233 @@ export function auditRatioChart(auditTransactions) {
             `).join('');
     }
 }
+
+export function lineGraph(xpTransactions) {
+    // Process data to cumulative XP over time
+    let cumulativeXP = 0;
+    const xpData = xpTransactions.map(transaction => {
+        cumulativeXP += transaction.amount;
+        return {
+            date: new Date(transaction.createdAt),
+            xp: cumulativeXP,
+            originalAmount: transaction.amount
+        };
+    });
+
+    const margin = { top: 30, right: 50, bottom: 60, left: 70 };
+    const width = 1000 - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
+
+    // const svg = document.querySelector('.graph-svg');
+    const xAxisGroup = document.querySelector('.x-axis');
+    const yAxisGroup = document.querySelector('.y-axis');
+    const xGridGroup = document.querySelector('.x-grid');
+    const yGridGroup = document.querySelector('.y-grid');
+    const linePath = document.querySelector('.line');
+    const dotsGroup = document.querySelector('.dots');
+    const tooltip = document.querySelector('.tooltip');
+
+    // Set up scales
+    const xScale = d => {
+        const dates = xpData.map(d => d.date);
+        const minDate = new Date(Math.min(...dates));
+        const maxDate = new Date(Math.max(...dates));
+        const range = maxDate - minDate;
+        return margin.left + ((d - minDate) / range) * width;
+    };
+
+    const yScale = d => {
+        const maxXP = Math.max(...xpData.map(d => d.xp));
+        return height - margin.bottom - (d / maxXP) * (height - margin.top - margin.bottom);
+    };
+
+    // Create line generator
+    const lineGenerator = () => {
+        let path = '';
+        xpData.forEach((d, i) => {
+            const x = xScale(d.date);
+            const y = yScale(d.xp);
+            if (i === 0) {
+                path += `M ${x},${y}`;
+            } else {
+                path += ` L ${x},${y}`;
+            }
+        });
+        return path;
+    };
+
+    // Draw axes
+    const drawAxes = () => {
+        // X Axis (dates)
+        const dates = xpData.map(d => d.date);
+        const minDate = new Date(Math.min(...dates));
+        const maxDate = new Date(Math.max(...dates));
+        const dateRange = maxDate - minDate;
+
+        // Calculate approximately 10 ticks
+        const tickCount = 10;
+        const tickInterval = dateRange / (tickCount - 1);
+
+        for (let i = 0; i < tickCount; i++) {
+            const date = new Date(minDate.getTime() + (i * tickInterval));
+            const x = xScale(date);
+
+            // Tick
+            const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            tick.setAttribute('x1', x);
+            tick.setAttribute('y1', height - margin.bottom);
+            tick.setAttribute('x2', x);
+            tick.setAttribute('y2', height - margin.bottom + 6);
+            tick.setAttribute('class', 'axis-tick');
+            xAxisGroup.appendChild(tick);
+
+            // Label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', x);
+            label.setAttribute('y', height - margin.bottom + 20);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('class', 'axis-label');
+            label.textContent = formatDate(date);
+            xAxisGroup.appendChild(label);
+
+            // Grid line
+            const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            gridLine.setAttribute('x1', x);
+            gridLine.setAttribute('y1', margin.top);
+            gridLine.setAttribute('x2', x);
+            gridLine.setAttribute('y2', height - margin.bottom);
+            gridLine.setAttribute('class', 'grid-line');
+            xGridGroup.appendChild(gridLine);
+        }
+
+        // X axis line
+        const xAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        xAxisLine.setAttribute('d', `M ${margin.left},${height - margin.bottom} H ${width + margin.left}`);
+        xAxisLine.setAttribute('class', 'axis-line');
+        xAxisGroup.appendChild(xAxisLine);
+
+        // X axis label
+        const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xAxisLabel.setAttribute('x', width / 2 + margin.left);
+        xAxisLabel.setAttribute('y', height - 10);
+        xAxisLabel.setAttribute('text-anchor', 'middle');
+        xAxisLabel.setAttribute('class', 'axis-label');
+        xAxisLabel.textContent = 'Date';
+        xAxisGroup.appendChild(xAxisLabel);
+
+        // Y Axis (XP)
+        const maxXP = Math.max(...xpData.map(d => d.xp));
+        const yTicks = 8;
+        const yTickInterval = Math.ceil(maxXP / yTicks / 100) * 100; // Round to nearest 100
+
+        for (let i = 0; i <= yTicks; i++) {
+            const yValue = i * yTickInterval;
+            const y = yScale(yValue);
+
+            // Tick
+            const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            tick.setAttribute('x1', margin.left - 6);
+            tick.setAttribute('y1', y);
+            tick.setAttribute('x2', margin.left);
+            tick.setAttribute('y2', y);
+            tick.setAttribute('class', 'axis-tick');
+            yAxisGroup.appendChild(tick);
+
+            // Label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', margin.left - 10);
+            label.setAttribute('y', y + 4);
+            label.setAttribute('text-anchor', 'end');
+            label.setAttribute('class', 'axis-label');
+            label.textContent = yValue.toLocaleString();
+            yAxisGroup.appendChild(label);
+
+            // Grid line
+            const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            gridLine.setAttribute('x1', margin.left);
+            gridLine.setAttribute('y1', y);
+            gridLine.setAttribute('x2', width + margin.left);
+            gridLine.setAttribute('y2', y);
+            gridLine.setAttribute('class', 'grid-line');
+            yGridGroup.appendChild(gridLine);
+        }
+
+        // Y axis line
+        const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        yAxisLine.setAttribute('d', `M ${margin.left},${height - margin.bottom} V ${margin.top}`);
+        yAxisLine.setAttribute('class', 'axis-line');
+        yAxisGroup.appendChild(yAxisLine);
+
+        // Y axis label
+        const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yAxisLabel.setAttribute('x', -height / 2);
+        yAxisLabel.setAttribute('y', -30);
+        yAxisLabel.setAttribute('text-anchor', 'middle');
+        yAxisLabel.setAttribute('transform', 'rotate(-90)');
+        yAxisLabel.setAttribute('class', 'axis-label');
+        yAxisLabel.textContent = 'Cumulative XP';
+        yAxisGroup.appendChild(yAxisLabel);
+    };
+
+    // Format date for display
+    const formatDate = date => {
+        return new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'short'
+            // day: 'numeric'
+        }).format(date);
+    };
+
+    // Format date with time for tooltip
+    const formatDateTime = date => {
+        return new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    };
+
+    // Draw line
+    linePath.setAttribute('d', lineGenerator());
+
+    // Draw dots
+    xpData.forEach(d => {
+        const x = xScale(d.date);
+        const y = yScale(d.xp);
+
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', x);
+        dot.setAttribute('cy', y);
+        dot.setAttribute('r', 6);
+        dot.setAttribute('class', 'dot');
+        dot.setAttribute('data-date', d.date.toISOString());
+        dot.setAttribute('data-xp', d.xp);
+        dot.setAttribute('data-amount', d.originalAmount);
+        dotsGroup.appendChild(dot);
+
+        // Add hover events
+        dot.addEventListener('mouseover', function (e) {
+            const date = new Date(this.getAttribute('data-date'));
+            const xp = parseInt(this.getAttribute('data-xp'));
+            const amount = parseInt(this.getAttribute('data-amount'));
+
+            tooltip.innerHTML = `
+                        <strong>${formatDateTime(date)}</strong><br/>
+                        Transaction: +${amount.toLocaleString()} XP<br/>
+                        Total: ${xp.toLocaleString()} XP
+                    `;
+            tooltip.style.left = (e.pageX + 10) + 'px';
+            tooltip.style.top = (e.pageY - 10) + 'px';
+            tooltip.style.opacity = 1;
+        });
+
+        dot.addEventListener('mouseout', function () {
+            tooltip.style.opacity = 0;
+        });
+    });
+
+    // Draw axes
+    drawAxes();
+}

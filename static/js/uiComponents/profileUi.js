@@ -61,7 +61,19 @@ export const profile = (user, processedData) => `
     </div>
 
 
-    <p>XP Over Time Graph (Coming Soon)</p>
+    <div class="graph-container">
+        <h2 class="graph-title">Your XP Earnings Timeline</h2>
+        <svg class="graph-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
+            <g class="x-axis"></g>
+            <g class="y-axis"></g>
+            <g class="grid x-grid"></g>
+            <g class="grid y-grid"></g>
+            <path class="line"></path>
+            <g class="dots"></g>
+        </svg>
+    </div>
+
+    <div class="tooltip"></div>
 
     <button id="logout-btn">Logout</button>
 </div>
