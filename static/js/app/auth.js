@@ -65,7 +65,14 @@ function setupAuthListeners() {
             localStorage.setItem("token", token);
             checkAuthStatusAndRenderUi()
         } catch (error) {
-            authError.textContent = "Login failed: " + error.message;
+            let errorMsg = "";
+            try {
+                const parsed = JSON.parse(error.message);
+                errorMsg += parsed.error || error.message;
+            } catch {
+                errorMsg += error.message;
+            }
+            authError.textContent = errorMsg;
         }
     });
 }

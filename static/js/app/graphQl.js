@@ -70,7 +70,7 @@ export async function fetchUserProfile(token) {
     <div class="error-page">
         <p class="error-page-text">${error.message}. Make sure you have a stable connection.</p>
         <p class="error-page-text">If you think the error is from us, please check back later.</p>
-        <button class="err-btn">Try again</button>
+        <button class="err-btn pointer">Try again</button>
     </div>
     `
     document.querySelector('.err-btn').addEventListener('click', () => {

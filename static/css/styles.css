@@ -5,6 +5,33 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
+/* general styles =============================================================== */
+
+:root {
+    --pri-color: royalblue;
+    --chalk-white: #dedede;
+    --back-grey: rgb(230, 230, 230);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --border-radius: 21px;
+}
+
+body {
+    background-color: var(--back-grey);
+}
+
+button {
+    border: none;
+}
+
+button:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 .error {
     color: red;
 }
@@ -139,4 +166,29 @@
     font-size: 14px;
     opacity: 0;
     transition: opacity 0.2s;
+}
+
+/* error page styles =================================================================== */
+
+.error-page {
+    background-color: white;
+    width: fit-content;
+    margin: 50% auto 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+    padding: 21px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    font-size: 1em;
+}
+
+.error-page button {
+    width: fit-content;
+    margin: auto;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    background-color: var(--pri-color);
+    color: white;
 }
