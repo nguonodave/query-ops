@@ -29,7 +29,7 @@ export const profile = (user, processedData) => `
     </section>
 
     <div class="pie-charts">
-        <div class="chart-container pass-fail-chart">
+        <div class="chart-contents pass-fail-chart">
             <h3>PASS/FAIL ratio</h3>
 
             <div class="chart-container">
@@ -49,8 +49,14 @@ export const profile = (user, processedData) => `
         </div>
 
 
-        <div class="chart-container audit-ratio-chart">
-            <p>Audit ratio pie chart (Coming Soon)</p>
+        <div class="chart-contents audit-ratio-chart">
+            <div class="audit-chart-container">
+                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                    <g id="pie-segments"></g>
+                </svg>
+            </div>
+            
+            <div class="audit-chart-legend" id="audit-chart-legend"></div>
         </div>
     </div>
 

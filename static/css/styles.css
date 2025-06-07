@@ -38,3 +38,27 @@
     margin-right: 5px;
     border-radius: 3px;
 }
+
+.audit-chart-container {
+    width: 200px;
+    height: 200px;
+}
+
+.audit-chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.audit-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.audit-legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}

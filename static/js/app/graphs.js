@@ -1,3 +1,5 @@
+import { processDoneRatio, processReceivedRatio } from "./dataProcessors.js";
+
 export function passFailChart(progresses) {
     const chartSvg = document.querySelector('.chart');
     const legendPass = document.getElementById('legend-pass');
@@ -83,5 +85,95 @@ export function passFailChart(progresses) {
             x: centerX + (radius * Math.cos(angleInRadians)),
             y: centerY + (radius * Math.sin(angleInRadians))
         };
+    }
+}
+
+export function auditRatioChart(auditTransactions) {
+    // Calculate values
+    const doneMB = processDoneRatio(auditTransactions);
+    const receivedMB = processReceivedRatio(auditTransactions);
+    const totalMB = doneMB + receivedMB;
+
+    // Calculate percentages
+    const donePercent = Math.round((doneMB / totalMB) * 1000) / 10;
+    const receivedPercent = Math.round((receivedMB / totalMB) * 1000) / 10;
+
+    // Prepare chart data
+    const chartData = [
+        {
+            value: donePercent,
+            color: '#4CAF50',
+            label: 'Done',
+            mbValue: doneMB
+        },
+        {
+            value: receivedPercent,
+            color: '#2196F3',
+            label: 'Received',
+            mbValue: receivedMB
+        }
+    ];
+
+    // Initialize the chart
+    renderChart(chartData);
+
+    function renderChart(data) {
+        const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+        let cumulativePercent = 0;
+        const centerX = 50;
+        const centerY = 50;
+        const radius = 45;
+        const strokeWidth = 10;
+
+        // Clear previous segments
+        const pieSegments = document.getElementById('pie-segments');
+        pieSegments.innerHTML = '';
+
+        // Create each segment
+        data.forEach(item => {
+            const percent = item.value / totalValue;
+            const startAngle = cumulativePercent * 2 * Math.PI;
+            const endAngle = (cumulativePercent + percent) * 2 * Math.PI;
+
+            // Outer circle coordinates
+            const x1 = centerX + Math.sin(startAngle) * radius;
+            const y1 = centerY - Math.cos(startAngle) * radius;
+            const x2 = centerX + Math.sin(endAngle) * radius;
+            const y2 = centerY - Math.cos(endAngle) * radius;
+
+            // Inner circle coordinates (for doughnut hole)
+            const innerRadius = radius - strokeWidth;
+            const x3 = centerX + Math.sin(endAngle) * innerRadius;
+            const y3 = centerY - Math.cos(endAngle) * innerRadius;
+            const x4 = centerX + Math.sin(startAngle) * innerRadius;
+            const y4 = centerY - Math.cos(startAngle) * innerRadius;
+
+            const largeArcFlag = percent > 0.5 ? 1 : 0;
+
+            const pathData = [
+                `M ${x1} ${y1}`,
+                `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                `L ${x3} ${y3}`,
+                `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${x4} ${y4}`,
+                'Z'
+            ].join(' ');
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathData);
+            path.setAttribute('fill', item.color);
+            path.setAttribute('stroke', 'none');
+
+            pieSegments.appendChild(path);
+            cumulativePercent += percent;
+        });
+
+        // Update legend
+        const legend = document.getElementById('audit-chart-legend');
+        legend.innerHTML = data.map(item => `
+                <div class="audit-legend-item">
+                    <div class="audit-legend-color" style="background-color: ${item.color};"></div>
+                    <div>${item.label}: ${item.mbValue}MB (${item.value}%)</div>
+                </div>
+            `).join('');
     }
 }
