@@ -102,13 +102,13 @@ export function auditRatioChart(auditTransactions) {
     const chartData = [
         {
             value: donePercent,
-            color: '#4CAF50',
+            color: '#4169e1',
             label: 'Done',
             mbValue: doneMB
         },
         {
             value: receivedPercent,
-            color: '#2196F3',
+            color: '#4CAF50',
             label: 'Received',
             mbValue: receivedMB
         }
@@ -337,7 +337,7 @@ export function lineGraph(xpTransactions) {
         // Y axis label
         const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         yAxisLabel.setAttribute('x', -height / 2);
-        yAxisLabel.setAttribute('y', -30);
+        yAxisLabel.setAttribute('y', -45);
         yAxisLabel.setAttribute('text-anchor', 'middle');
         yAxisLabel.setAttribute('transform', 'rotate(-90)');
         yAxisLabel.setAttribute('class', 'axis-label');

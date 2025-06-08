@@ -11,8 +11,11 @@
     --pri-color: royalblue;
     --chalk-white: #dedede;
     --back-grey: rgb(230, 230, 230);
+    --sec-back-grey: rgba(230, 230, 230, 0.4);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     --border-radius: 21px;
+    --pri-green: rgb(76, 175, 80);
+    ;
 }
 
 body {
@@ -43,12 +46,19 @@ button:hover {
 }
 
 #main-app {
-    padding: 0 7%;
+    padding: 0 7% 3%;
 }
 
 #profile {
     display: flex;
     flex-direction: column;
+}
+
+.card {
+    background-color: white;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    padding: 21px;
 }
 
 /* nav styles =========================================================================== */
@@ -63,6 +73,94 @@ nav {
 nav button {
     background-color: red;
     font-size: 1em;
+}
+
+.profile-body {
+    display: flex;
+    gap: 25px;
+}
+
+@media only screen and (max-width: 1119px) {
+    .profile-body {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* left profile body ======================================================================== */
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.basic-details {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.username {
+    font-size: 33px;
+    text-align: center;
+    background-color: var(--sec-back-grey);
+    padding: 21px;
+    border-radius: var(--border-radius);
+}
+
+.basic-detail {
+    font-size: 1em;
+    display: flex;
+    justify-content: space-between;
+}
+
+.basic-detail .detail-label {
+    color: rgb(70, 70, 70);
+}
+
+.basic-detail .detail {
+    font-weight: bold;
+}
+
+.metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.metrics h3 {
+    font-size: 21px;
+}
+
+.metrics-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 3px;
+}
+
+.total-xp,
+.audit-ratio {
+    background-color: var(--sec-back-grey);
+    padding: 21px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.total-xp p,
+.audit-ratio p {
+    font-size: 1em;
+}
+
+.total-xp h3 {
+    color: var(--pri-color);
+}
+
+.audit-ratio h3 {
+    color: var(--pri-green);
+}
+
+.metrics-content h3 {
+    font-size: 25px;
 }
 
 /* pass/fail chart styles ================================================================ */
@@ -97,16 +195,50 @@ nav button {
     border-radius: 3px;
 }
 
+/* general graphs styles ============================================================================= */
+.graphs {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 25px;
+}
+
+.pie-charts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 33px 7rem;
+    gap: 33px;
+}
+
+.chart-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* audit chart styles ================================================================== */
 
+.audit-ratio-chart,
+.pass-fail-chart {
+    background-color: var(--sec-back-grey);
+    border-radius: var(--border-radius);
+    padding: 21px;
+}
+
 .audit-chart-container {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
+}
+
+.audit-chart-container svg {
+    padding: 12px;
 }
 
 .audit-chart-legend {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 8px;
     margin-top: 20px;
 }
@@ -127,10 +259,8 @@ nav button {
 
 .graph-container {
     width: 100%;
-    max-width: 1000px;
-    margin: 20px 0;
+    /* max-width: 1000px; */
     border: 1px solid #ddd;
-    border-radius: 8px;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -142,8 +272,8 @@ nav button {
 }
 
 .graph-svg {
-    width: 96%;
-    margin-left: 2%;
+    width: 90%;
+    margin-left: 5%;
     height: auto;
     overflow: visible;
 }
