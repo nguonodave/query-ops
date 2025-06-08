@@ -1,5 +1,7 @@
 export const auth = () => `
 <form id="login-form">
+    <h3>Login to your profile</h3>
+
     <input type="text" id="username-or-email" placeholder="Email or Nickname" required>
 
     <div class="password-wrapper">

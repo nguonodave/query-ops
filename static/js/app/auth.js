@@ -38,6 +38,28 @@ export async function checkAuthStatusAndRenderUi() {
 
 function setupAuthListeners() {
     const loginForm = document.getElementById('login-form')
+    const openEyes = document.querySelectorAll('.open-eyes');
+    const closedEyes = document.querySelectorAll('.closed-eyes');
+
+    // password visibility toggle
+    function togglePasswordVisibility(e) {
+        const wrapper = e.target.closest('.password-wrapper');
+        const input = wrapper.querySelector('input');
+        const openEye = wrapper.querySelector('.open-eyes');
+        const closedEye = wrapper.querySelector('.closed-eyes');
+
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        openEye.style.display = isPassword ? 'inline' : 'none';
+        closedEye.style.display = isPassword ? 'none' : 'inline';
+    }
+
+    openEyes.forEach(icon => {
+        icon.addEventListener('click', togglePasswordVisibility);
+    });
+    closedEyes.forEach(icon => {
+        icon.addEventListener('click', togglePasswordVisibility);
+    });
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault()
