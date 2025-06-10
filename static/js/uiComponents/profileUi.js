@@ -42,7 +42,7 @@ export const profile = (user, processedData) => `
                 </div>
 
                 <div class="basic-detail">
-                    <span class="detail-label">Latest Created Project:</span>
+                    <span class="detail-label">Latest Project:</span>
                     <span class="detail">${processedData.latestProject}</span>
                 </div>
             </section>
