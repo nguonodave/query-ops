@@ -2,7 +2,7 @@ export const auth = () => `
 <form id="login-form">
     <h3>Login to your profile</h3>
 
-    <input type="text" id="username-or-email" placeholder="Email or Nickname" required>
+    <input type="text" id="username-or-email" placeholder="Email or Username" required>
 
     <div class="password-wrapper">
         <input type="password" id="password" placeholder="Password" required>
